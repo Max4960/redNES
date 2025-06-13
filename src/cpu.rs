@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use crate::bus::Bus;
 use crate::opcodes;
 
 #[allow(non_snake_case)]
@@ -23,7 +24,7 @@ pub struct CPU {
     pub index_y: u8,
     pub sp: u8, // stack pointer
     pub pc: u16, // program counter
-    memory: Box<[u8; 0x10000]>
+    pub bus: Bus,
 }
 
 #[derive(Debug)]
@@ -60,16 +61,24 @@ pub trait Memory {
 
 impl Memory for CPU {
     fn mem_read(&self, address: u16) -> u8 {
-        self.memory[address as usize]
+        self.bus.mem_read(address)
     }
 
     fn mem_write(&mut self, address: u16, value: u8) {
-        self.memory[address as usize] = value;
+        self.bus.mem_write(address, value);
+    }
+
+    fn mem_read_u16(&self, pos: u16) -> u16 {
+        self.bus.mem_read_u16(pos)
+    }
+
+    fn mem_write_u16(&mut self, pos: u16, data: u16) {
+        self.bus.mem_write_u16(pos, data)
     }
 }
 
 impl CPU {
-    pub fn new() -> CPU {
+    pub fn new(bus: Bus) -> CPU {
         CPU {
             acc: 0,
             status: StatusFlags::INTERRUPT_DISABLE | StatusFlags::BREAK2,
@@ -77,7 +86,7 @@ impl CPU {
             index_y: 0,
             sp: STACK_RESET,
             pc: 0,
-            memory: Box::new([0; 0x10000])
+            bus,
         }
     }
 
@@ -355,8 +364,10 @@ impl CPU {
     }
 
     pub fn load(&mut self, program: Vec<u8>) {
-        self.memory[0x0600 .. (0x0600 + program.len())].copy_from_slice(&program[..]);
-        self.mem_write_u16(0xFFFC, 0x0600);
+        for i in 0..(program.len() as u16) {
+            self.mem_write(0x0000 + i, program[i as usize]);
+        }
+        self.mem_write_u16(0xFFFC, 0x0000);
     }
 
 
