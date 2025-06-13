@@ -199,7 +199,7 @@ lazy_static! {
         Instruction::new(0xF8, "SED", 1, AddressingMode::NonAddressing, 2),
         Instruction::new(0xB8, "CLV", 1, AddressingMode::NonAddressing, 2),
     ];
-    
+
     pub static ref CPU_INSTRUCTIONS_MAP: HashMap<u8, &'static Instruction> = {
         let mut map = HashMap::new();
         for instruction in &*CPU_INSTRUCTIONS {

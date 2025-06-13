@@ -425,242 +425,242 @@ impl CPU {
     where
         F: FnMut(&mut CPU),
     {
-            let opcodes: &HashMap<u8, &'static opcodes::Instruction> = &opcodes::CPU_INSTRUCTIONS_MAP;
+        let opcodes: &HashMap<u8, &'static opcodes::Instruction> = &opcodes::CPU_INSTRUCTIONS_MAP;
 
-            loop {
-                let opcode = self.mem_read(self.pc);
-                self.pc += 1;
-                let pc_state = self.pc;
+        loop {
+            let opcode = self.mem_read(self.pc);
+            self.pc += 1;
+            let pc_state = self.pc;
 
-                let instruction = opcodes.get(&opcode).unwrap();
+            let instruction = opcodes.get(&opcode).unwrap();
 
-                match opcode {
-                    // --- LDA ---
-                    0xA9 | 0xA5 | 0xB5 | 0xAD | 0xBD | 0xB9 | 0xA1 | 0xB1 => self.lda(&instruction.mode),
-                    // --- LDX ---
-                    0xA2 | 0xA6 | 0xB6 | 0xAE | 0xBE => self.ldx(&instruction.mode),
-                    // --- LDY ---
-                    0xA0 | 0xA4 | 0xB4 | 0xAC | 0xBC => self.ldy(&instruction.mode),
-                    // --- STA ---
-                    0x85 | 0x8D | 0x95 | 0x9D | 0x99 | 0x81 | 0x91 => self.sta(&instruction.mode),
-                    // --- STX ---
-                    0x86 | 0x96 | 0x8E => self.stx(&instruction.mode),
-                    // --- STY ---
-                    0x84 | 0x94 | 0x8C => self.sty(&instruction.mode),
-                    // --- ADC ---
-                    0x69 | 0x65 | 0x75 | 0x6D | 0x7D | 0x79 | 0x61 | 0x71 => self.adc(&instruction.mode),
-                    // --- SBC ---
-                    0xE9 | 0xE5 | 0xF5 | 0xED | 0xFD | 0xF9 | 0xE1 | 0xF1 => self.sbc(&instruction.mode),
-                    // --- Compare Instructions ---
-                    0xC9 | 0xC5 | 0xD5 | 0xCD | 0xDD | 0xD9 | 0xC1 | 0xD1 => self.compare(&instruction.mode, self.acc),
-                    0xE0 | 0xE4 | 0xEC => self.compare(&instruction.mode, self.index_x),
-                    0xC0 | 0xC4 | 0xCC => self.compare(&instruction.mode, self.index_y),
-                    // --- AND ---
-                    0x29 | 0x25 | 0x35 | 0x2D | 0x3D | 0x39 | 0x21 | 0x31 => self.and(&instruction.mode),
-                    // --- EOR ---
-                    0x49 | 0x45 | 0x55 | 0x4D | 0x5D | 0x59 | 0x41 | 0x51 => self.eor(&instruction.mode),
-                    // --- ORA ---
-                    0x09 | 0x05 | 0x15 | 0x0D | 0x1D | 0x19 | 0x01 | 0x11 => self.ora(&instruction.mode),
-                    // --- BIT ---
-                    0x24 | 0x2C => self.bit(&instruction.mode),
-                    // --- INC ---
-                    0xE6 | 0xEE | 0xF6 | 0xFE => self.inc(&instruction.mode),
-                    // --- DEC ---
-                    0xC6 | 0xCE | 0xD6 | 0xDE => self.dec(&instruction.mode),
-                    // --- INX ---
-                    0xE8 => self.inx(),
-                    // --- INY ---
-                    0xC8 => self.iny(),
-                    // --- DEX ---
-                    0xCA => self.dex(),
-                    // --- DEY ---
-                    0x88 => self.dey(),
+            match opcode {
+                // --- LDA ---
+                0xA9 | 0xA5 | 0xB5 | 0xAD | 0xBD | 0xB9 | 0xA1 | 0xB1 => self.lda(&instruction.mode),
+                // --- LDX ---
+                0xA2 | 0xA6 | 0xB6 | 0xAE | 0xBE => self.ldx(&instruction.mode),
+                // --- LDY ---
+                0xA0 | 0xA4 | 0xB4 | 0xAC | 0xBC => self.ldy(&instruction.mode),
+                // --- STA ---
+                0x85 | 0x8D | 0x95 | 0x9D | 0x99 | 0x81 | 0x91 => self.sta(&instruction.mode),
+                // --- STX ---
+                0x86 | 0x96 | 0x8E => self.stx(&instruction.mode),
+                // --- STY ---
+                0x84 | 0x94 | 0x8C => self.sty(&instruction.mode),
+                // --- ADC ---
+                0x69 | 0x65 | 0x75 | 0x6D | 0x7D | 0x79 | 0x61 | 0x71 => self.adc(&instruction.mode),
+                // --- SBC ---
+                0xE9 | 0xE5 | 0xF5 | 0xED | 0xFD | 0xF9 | 0xE1 | 0xF1 => self.sbc(&instruction.mode),
+                // --- Compare Instructions ---
+                0xC9 | 0xC5 | 0xD5 | 0xCD | 0xDD | 0xD9 | 0xC1 | 0xD1 => self.compare(&instruction.mode, self.acc),
+                0xE0 | 0xE4 | 0xEC => self.compare(&instruction.mode, self.index_x),
+                0xC0 | 0xC4 | 0xCC => self.compare(&instruction.mode, self.index_y),
+                // --- AND ---
+                0x29 | 0x25 | 0x35 | 0x2D | 0x3D | 0x39 | 0x21 | 0x31 => self.and(&instruction.mode),
+                // --- EOR ---
+                0x49 | 0x45 | 0x55 | 0x4D | 0x5D | 0x59 | 0x41 | 0x51 => self.eor(&instruction.mode),
+                // --- ORA ---
+                0x09 | 0x05 | 0x15 | 0x0D | 0x1D | 0x19 | 0x01 | 0x11 => self.ora(&instruction.mode),
+                // --- BIT ---
+                0x24 | 0x2C => self.bit(&instruction.mode),
+                // --- INC ---
+                0xE6 | 0xEE | 0xF6 | 0xFE => self.inc(&instruction.mode),
+                // --- DEC ---
+                0xC6 | 0xCE | 0xD6 | 0xDE => self.dec(&instruction.mode),
+                // --- INX ---
+                0xE8 => self.inx(),
+                // --- INY ---
+                0xC8 => self.iny(),
+                // --- DEX ---
+                0xCA => self.dex(),
+                // --- DEY ---
+                0x88 => self.dey(),
 
-                    // --- Stack Operations ---
-                    0x48 => self.pha(),
-                    0x68 => self.pla(),
-                    0x08 => self.php(),
-                    0x28 => self.plp(),
+                // --- Stack Operations ---
+                0x48 => self.pha(),
+                0x68 => self.pla(),
+                0x08 => self.php(),
+                0x28 => self.plp(),
 
-                    // --- Transfers ---
-                    0xAA => self.tax(),
-                    0xA8 => self.tay(),
-                    0x8A => self.txa(),
-                    0x98 => self.tya(),
-                    0xBA => self.tsx(),
-                    0x9A => self.txs(),
+                // --- Transfers ---
+                0xAA => self.tax(),
+                0xA8 => self.tay(),
+                0x8A => self.txa(),
+                0x98 => self.tya(),
+                0xBA => self.tsx(),
+                0x9A => self.txs(),
 
-                    // --- Branch Instructions ---
-                    0x90 => self.branch(!self.get_flag(StatusFlags::CARRY)),   // BCC
-                    0xB0 => self.branch(self.get_flag(StatusFlags::CARRY)),    // BCS
-                    0xF0 => self.branch(self.get_flag(StatusFlags::ZERO)),     // BEQ
-                    0xD0 => self.branch(!self.get_flag(StatusFlags::ZERO)),    // BNE
-                    0x30 => self.branch(self.get_flag(StatusFlags::NEGATIVE)), // BMI
-                    0x10 => self.branch(!self.get_flag(StatusFlags::NEGATIVE)), // BPL
-                    0x50 => self.branch(!self.get_flag(StatusFlags::OVERFLOW)), // BVC
-                    0x70 => self.branch(self.get_flag(StatusFlags::OVERFLOW)), // BVS
+                // --- Branch Instructions ---
+                0x90 => self.branch(!self.get_flag(StatusFlags::CARRY)),   // BCC
+                0xB0 => self.branch(self.get_flag(StatusFlags::CARRY)),    // BCS
+                0xF0 => self.branch(self.get_flag(StatusFlags::ZERO)),     // BEQ
+                0xD0 => self.branch(!self.get_flag(StatusFlags::ZERO)),    // BNE
+                0x30 => self.branch(self.get_flag(StatusFlags::NEGATIVE)), // BMI
+                0x10 => self.branch(!self.get_flag(StatusFlags::NEGATIVE)), // BPL
+                0x50 => self.branch(!self.get_flag(StatusFlags::OVERFLOW)), // BVC
+                0x70 => self.branch(self.get_flag(StatusFlags::OVERFLOW)), // BVS
 
-                    // --- Status Flag Changes ---
-                    0x18 => self.set_flag(StatusFlags::CARRY, false), // CLC
-                    0x38 => self.set_flag(StatusFlags::CARRY, true),  // SEC
-                    0x58 => self.set_flag(StatusFlags::INTERRUPT_DISABLE, false), // CLI
-                    0x78 => self.set_flag(StatusFlags::INTERRUPT_DISABLE, true),  // SEI
-                    0xD8 => self.set_flag(StatusFlags::DECIMAL_MODE, false), // CLD
-                    0xF8 => self.set_flag(StatusFlags::DECIMAL_MODE, true),  // SED
-                    0xB8 => self.set_flag(StatusFlags::OVERFLOW, false), //CLV
+                // --- Status Flag Changes ---
+                0x18 => self.set_flag(StatusFlags::CARRY, false), // CLC
+                0x38 => self.set_flag(StatusFlags::CARRY, true),  // SEC
+                0x58 => self.set_flag(StatusFlags::INTERRUPT_DISABLE, false), // CLI
+                0x78 => self.set_flag(StatusFlags::INTERRUPT_DISABLE, true),  // SEI
+                0xD8 => self.set_flag(StatusFlags::DECIMAL_MODE, false), // CLD
+                0xF8 => self.set_flag(StatusFlags::DECIMAL_MODE, true),  // SED
+                0xB8 => self.set_flag(StatusFlags::OVERFLOW, false), //CLV
 
-                    // --- JMP Absolute ---
-                    0x4C => {
-                        self.pc = self.mem_read_u16(self.pc);
-                    }
-
-                    // --- JMP Indirect ---
-                    0x6C => {
-                        let operand_addr = self.mem_read_u16(self.pc);
-                        let target_addr = if operand_addr & 0x00FF == 0x00FF {
-                            // 6502 bug case: page boundary crossing
-                            let lo = self.mem_read(operand_addr);
-                            let hi = self.mem_read(operand_addr & 0xFF00); // read from start of page
-                            (hi as u16) << 8 | (lo as u16)
-                        } else {
-                            // normal case
-                            self.mem_read_u16(operand_addr)
-                        };
-                        self.pc = target_addr;
-                    }
-
-                    // --- JSR ---
-                    0x20 => {
-                        self.stack_push_u16(self.pc + 1);
-                        self.pc = self.mem_read_u16(self.pc);
-                    }
-
-                    // --- RTS ---
-                    0x60 => {
-                        self.pc = self.stack_pop_u16() + 1;
-                    }
-
-                    // --- ASL ACC ---
-                    0x0A => {
-                        let mut value = self.acc;
-                        self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
-                        value <<= 1;
-                        self.update_zero_and_negative_flags(value);
-                        self.acc = value;
-                    }
-                    // --- ASL Mem ---
-                    0x06 | 0x16 | 0x0E | 0x1E => {
-                        let addr = self.get_operand_address(&instruction.mode);
-                        let mut value = self.mem_read(addr);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
-                        value <<= 1;
-                        self.update_zero_and_negative_flags(value);
-                        self.mem_write(addr, value);
-                    }
-
-                    // --- LSR ACC ---
-                    0x4A => {
-                        let mut value = self.acc;
-                        self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
-                        value >>= 1;
-                        self.update_zero_and_negative_flags(value);
-                        self.acc = value;
-                    }
-                    // --- LSR Mem ---
-                    0x46 | 0x56 | 0x4E | 0x5E => {
-                        let addr = self.get_operand_address(&instruction.mode);
-                        let mut value = self.mem_read(addr);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
-                        value >>= 1;
-                        self.update_zero_and_negative_flags(value);
-                        self.mem_write(addr, value);
-                    }
-
-                    // --- RTI ---
-                    0x40 => {
-                        self.status = self.stack_pop();
-                        self.set_flag(StatusFlags::BREAK, false);
-                        self.set_flag(StatusFlags::BREAK2, true);
-                        self.pc = self.stack_pop_u16();
-                    }
-
-                    // --- ROL ACC ---
-                    0x2A => {
-                        let mut value = self.acc;
-                        let old_carry = self.get_flag(StatusFlags::CARRY);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
-                        value <<= 1;
-                        if old_carry {
-                            value |= 0x01;
-                        }
-                        self.update_zero_and_negative_flags(value);
-                        self.acc = value;
-                    }
-                    // --- ROL Mem ---
-                    0x26 | 0x36 | 0x2E | 0x3E => {
-                        let addr = self.get_operand_address(&instruction.mode);
-                        let mut value = self.mem_read(addr);
-                        let old_carry = self.get_flag(StatusFlags::CARRY);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
-                        value <<= 1;
-                        if old_carry {
-                            value |= 0x01;
-                        }
-                        self.update_zero_and_negative_flags(value);
-                        self.mem_write(addr, value);
-                    }
-
-                    // --- ROR ACC ---
-                    0x6A => {
-                        let mut value = self.acc;
-                        let old_carry = self.get_flag(StatusFlags::CARRY);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
-                        value >>= 1;
-                        if old_carry {
-                            value |= 0x80;
-                        }
-                        self.update_zero_and_negative_flags(value);
-                        self.acc = value;
-                    }
-                    // --- ROR Mem ---
-                    0x66 | 0x76 | 0x6E | 0x7E => {
-                        let addr = self.get_operand_address(&instruction.mode);
-                        let mut value = self.mem_read(addr);
-                        let old_carry = self.get_flag(StatusFlags::CARRY);
-                        self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
-                        value >>= 1;
-                        if old_carry {
-                            value |= 0x80;
-                        }
-                        self.update_zero_and_negative_flags(value);
-                        self.mem_write(addr, value);
-                    }
-
-                    // --- NOP ---
-                    0xEA => {/* do nothing */},
-
-                    // --- BRK ---
-                    0x00 => {
-                        self.stack_push_u16(self.pc);
-
-                        let mut flags = self.status;
-                        flags |= StatusFlags::BREAK;
-                        flags |= StatusFlags::BREAK2;
-                        self.stack_push(flags);
-
-                        self.set_flag(StatusFlags::INTERRUPT_DISABLE, true);
-                        self.pc = self.mem_read_u16(0xFFFE);
-                    }
-
-                    _ => todo!(),
+                // --- JMP Absolute ---
+                0x4C => {
+                    self.pc = self.mem_read_u16(self.pc);
                 }
 
-                // handle setting pc for everything that isnt jumps and branches
-                if pc_state == self.pc {
-                    self.pc += (instruction.len -1) as u16;
+                // --- JMP Indirect ---
+                0x6C => {
+                    let operand_addr = self.mem_read_u16(self.pc);
+                    let target_addr = if operand_addr & 0x00FF == 0x00FF {
+                        // 6502 bug case: page boundary crossing
+                        let lo = self.mem_read(operand_addr);
+                        let hi = self.mem_read(operand_addr & 0xFF00); // read from start of page
+                        (hi as u16) << 8 | (lo as u16)
+                    } else {
+                        // normal case
+                        self.mem_read_u16(operand_addr)
+                    };
+                    self.pc = target_addr;
                 }
 
-                callback(self);
+                // --- JSR ---
+                0x20 => {
+                    self.stack_push_u16(self.pc + 1);
+                    self.pc = self.mem_read_u16(self.pc);
+                }
+
+                // --- RTS ---
+                0x60 => {
+                    self.pc = self.stack_pop_u16() + 1;
+                }
+
+                // --- ASL ACC ---
+                0x0A => {
+                    let mut value = self.acc;
+                    self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
+                    value <<= 1;
+                    self.update_zero_and_negative_flags(value);
+                    self.acc = value;
+                }
+                // --- ASL Mem ---
+                0x06 | 0x16 | 0x0E | 0x1E => {
+                    let addr = self.get_operand_address(&instruction.mode);
+                    let mut value = self.mem_read(addr);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
+                    value <<= 1;
+                    self.update_zero_and_negative_flags(value);
+                    self.mem_write(addr, value);
+                }
+
+                // --- LSR ACC ---
+                0x4A => {
+                    let mut value = self.acc;
+                    self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
+                    value >>= 1;
+                    self.update_zero_and_negative_flags(value);
+                    self.acc = value;
+                }
+                // --- LSR Mem ---
+                0x46 | 0x56 | 0x4E | 0x5E => {
+                    let addr = self.get_operand_address(&instruction.mode);
+                    let mut value = self.mem_read(addr);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
+                    value >>= 1;
+                    self.update_zero_and_negative_flags(value);
+                    self.mem_write(addr, value);
+                }
+
+                // --- RTI ---
+                0x40 => {
+                    self.status = self.stack_pop();
+                    self.set_flag(StatusFlags::BREAK, false);
+                    self.set_flag(StatusFlags::BREAK2, true);
+                    self.pc = self.stack_pop_u16();
+                }
+
+                // --- ROL ACC ---
+                0x2A => {
+                    let mut value = self.acc;
+                    let old_carry = self.get_flag(StatusFlags::CARRY);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
+                    value <<= 1;
+                    if old_carry {
+                        value |= 0x01;
+                    }
+                    self.update_zero_and_negative_flags(value);
+                    self.acc = value;
+                }
+                // --- ROL Mem ---
+                0x26 | 0x36 | 0x2E | 0x3E => {
+                    let addr = self.get_operand_address(&instruction.mode);
+                    let mut value = self.mem_read(addr);
+                    let old_carry = self.get_flag(StatusFlags::CARRY);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x80) > 0);
+                    value <<= 1;
+                    if old_carry {
+                        value |= 0x01;
+                    }
+                    self.update_zero_and_negative_flags(value);
+                    self.mem_write(addr, value);
+                }
+
+                // --- ROR ACC ---
+                0x6A => {
+                    let mut value = self.acc;
+                    let old_carry = self.get_flag(StatusFlags::CARRY);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
+                    value >>= 1;
+                    if old_carry {
+                        value |= 0x80;
+                    }
+                    self.update_zero_and_negative_flags(value);
+                    self.acc = value;
+                }
+                // --- ROR Mem ---
+                0x66 | 0x76 | 0x6E | 0x7E => {
+                    let addr = self.get_operand_address(&instruction.mode);
+                    let mut value = self.mem_read(addr);
+                    let old_carry = self.get_flag(StatusFlags::CARRY);
+                    self.set_flag(StatusFlags::CARRY, (value & 0x01) > 0);
+                    value >>= 1;
+                    if old_carry {
+                        value |= 0x80;
+                    }
+                    self.update_zero_and_negative_flags(value);
+                    self.mem_write(addr, value);
+                }
+
+                // --- NOP ---
+                0xEA => {/* do nothing */},
+
+                // --- BRK ---
+                0x00 => {
+                    self.stack_push_u16(self.pc);
+
+                    let mut flags = self.status;
+                    flags |= StatusFlags::BREAK;
+                    flags |= StatusFlags::BREAK2;
+                    self.stack_push(flags);
+
+                    self.set_flag(StatusFlags::INTERRUPT_DISABLE, true);
+                    self.pc = self.mem_read_u16(0xFFFE);
+                }
+
+                _ => todo!(),
             }
+
+            // handle setting pc for everything that isnt jumps and branches
+            if pc_state == self.pc {
+                self.pc += (instruction.len -1) as u16;
+            }
+
+            callback(self);
+        }
     }
 }
